@@ -11,10 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
+        Schema::create('variant_attributes', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('template_id')
+                ->constrained('templates')
+                ->cascadeOnDelete();
+
+            $table->string('name'); // Color
+            $table->string('key');  // color
+
             $table->timestamps();
+
+            $table->unique(['template_id', 'key']);
         });
+
     }
 
     /**
@@ -22,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_items');
+        Schema::dropIfExists('variant_attributes');
     }
 };

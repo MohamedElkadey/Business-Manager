@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('values', function (Blueprint $table) {
+        Schema::create('variant_attribute_options', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('variant_attribute_id')
+                ->constrained('variant_attributes')
+                ->cascadeOnDelete();
+
+            $table->string('value'); // Red, Blue, M, L
+
             $table->timestamps();
+
+            $table->unique(['variant_attribute_id', 'value']);
+
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('values');
+        Schema::dropIfExists('variant_attribute_options');
     }
 };

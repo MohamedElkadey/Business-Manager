@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('companys', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->uuid('uuid')->unique();
+            $table->string('slug')->unique();
+            $table->enum('plan_type',['free','premium'])->default('free');
+            $table->enum('status',['active','inactive'])->default('active');
+            $table->jsonb('settings')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

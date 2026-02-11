@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('price_models', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('cart_items', function (Blueprint $table) {
+            $table->foreignId('product_variant_id')->nullable()->constrained('product_variants');
+
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('price_models');
+        Schema::table('cart_items', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('product_variant_id');
+        });
     }
 };
