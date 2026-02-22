@@ -21,6 +21,14 @@ return new class extends Migration
             $table->foreignId('variant_attribute_option_id')
                 ->constrained('variant_attribute_options')
                 ->cascadeOnDelete();
+            $table->foreignId('variant_attribute_id')
+                ->constrained('variant_attributes')
+                ->cascadeOnDelete();
+
+            $table->unique([
+                'product_variant_id',
+                'variant_attribute_id'
+            ]);
 
             $table->timestamps();
 

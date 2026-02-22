@@ -15,17 +15,20 @@ return new class extends Migration
             $table->id();
             $table->foreignId('template_id')->constrained('templates')->cascadeOnDelete();
 
-            $table->string('key',50)->nullable(false); //internal identifier
+            // $table->string('key',50)->nullable(false); //internal identifier
             $table->string('label'); // الي هيظهر في UI
             $table->enum('field_type',['string','number','boolean','select','date','datetime'])->nullable(false);
             
             $table->string('unit',50)->nullable();
             $table->boolean('required')->default(true);
             $table->string('default_value')->nullable();
+            $table->integer('position')->default(0);
             $table->jsonb('options')->nullable(); //لما يكون نوعه select
             $table->timestamps();
 
             $table->unique(['template_id','key']);
+            $table->unique(['template_id','label']);
+            $table->unique(['template_id','position']);
             $table->index('template_id');
 
         });

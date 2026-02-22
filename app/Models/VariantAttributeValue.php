@@ -22,6 +22,9 @@ class VariantAttributeValue extends Model
     {
         return $this->belongsTo(Template::class);
     }
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
 
     public function options()
     {

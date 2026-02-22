@@ -11,11 +11,16 @@ class VariantOptionValue extends Model
     protected $fillable = [
         'product_variant_id',
         'variant_attribute_option_id',
+        'variant_attribute_id',
     ];
 
     public function variant()
     {
         return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+    }
+    public function attribute()
+    {
+        return $this->belongsTo(VariantAttributeValue::class, 'variant_attribute_id');
     }
 
     public function option()

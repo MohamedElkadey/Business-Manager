@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('variant_attributes', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('company_id')->constrained('companys')->cascadeOnDelete();
             $table->foreignId('template_id')
                 ->constrained('templates')
                 ->cascadeOnDelete();

@@ -14,9 +14,11 @@ class Template extends Model
         'name',
         'description',
         'expression',
+        'expression_type',
         'pricing_version',
         'parent_template_id',
         'is_active',
+        'status',
     ];
     protected $casts = [
         'pricing_version' => 'integer',
@@ -51,6 +53,9 @@ class Template extends Model
     }
     public function variantattribute(){
         return $this->hasMany(VariantAttributeValue::class);
+    }
+    public function is_active(){
+        return $this->is_active;
     }
     
 }

@@ -8,13 +8,14 @@ class Field extends Model
 {
     protected $fillable = [
         'template_id',
-        'key',
+        // 'key',
         'label',
-        'field_type',
+        'field_type', // ['string','number','boolean','select','date','datetime']
         'unit',
         'required',
         'default_value',
         'options',
+        'position',
     ];
 
     protected $guarded = [

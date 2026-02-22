@@ -22,6 +22,10 @@ return new class extends Migration
             // Frozen pricing contract
             $table->integer('pricing_version');
             $table->jsonb('pricing_snapshot');
+            $table->jsonb('product_snapshot');
+            
+            $table->index(['company_id','order_id']);
+
             $table->timestamps();
         });
     }

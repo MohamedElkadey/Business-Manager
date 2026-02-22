@@ -22,8 +22,10 @@ return new class extends Migration
                 'number', 'string', 'boolean', 'date', 'select'
             ])->default('number');
 
-            $table->string('unit',50);
+            $table->string('unit',50)->nullable();
             $table->jsonb('options')->nullable();
+            $table->jsonb('validation_rules')->nullable();
+
             $table->timestamps();
 
             $table->unique(['template_id','key']);

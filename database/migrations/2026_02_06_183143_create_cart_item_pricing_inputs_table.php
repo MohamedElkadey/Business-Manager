@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cart_item_pricing_inputs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pricing_template_input_id')->constrained('pricing_template_inputs')->cascadeOnDelete();
+            $table->foreignId('pricing_template_input_id')->constrained('pricing_template_inputs')->restrictOnDelete();
             $table->foreignId('cart_item_id')->constrained('cart_items')->cascadeOnDelete();
 
             $table->decimal('value_number',15,4)->nullable();
@@ -23,6 +23,8 @@ return new class extends Migration
             $table->dateTime('value_datetime')->nullable();
             $table->jsonb('value_json')->nullable();
             $table->timestamps();
+            
+            $table->unique(['cart_item_id','pricing_template_input_id']);
 
             $table->index(['pricing_template_input_id','cart_item_id']);
         });
