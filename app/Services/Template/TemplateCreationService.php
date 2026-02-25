@@ -2,12 +2,14 @@
 
 use App\Models\Company;
 use App\Models\Template;
+use App\Tenancy\TenantContext;
 class TemplateCreateService{
+    public function __construct(private TenantContext $tenant , private TenantGuard $tenantGuard){}
 
-    public function create(Company $company, array $data): Template
+    public function create( array $data): Template
     {
         return Template::create([
-            'company_id' => $company->id,
+            'company_id' => $this->tenant->getCompanyId(),
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'expression_type' => $data['expression_type'] ?? 'fixed',

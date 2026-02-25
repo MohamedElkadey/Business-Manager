@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\DB;
 use App\Models\Template;
+use App\Models\Company;
 class TemplatePublishService
 {
     public function publish(Template $template): Template
@@ -26,7 +27,28 @@ class TemplatePublishService
             return $locked->fresh();
         });
     }
+    public function checkPublishable(Template $template): bool
+    {
+        try {
+            $this->validateTemplateStructure($template);
+            return true;
+        } catch (DomainException $e) {
+            return false;
+        }
+    }
+    public function publishedTemplates(Company $company){
+        return $company->templates()->where('status', 'published')->get();
+    }
+    public function getPublishedTemplateById(Company $company, int $templateId){
+        return $company->templates()->where('status', 'published')->findOrFail($templateId);
+    }
+    public function is_published(Template $template): bool{
+        return $template->status === 'published';
+    }
 
+    public function is_draft(Template $template): bool{
+        return $template->status === 'draft';
+    }
     private function validateTemplateStructure(Template $template): void
     {
         if ($template->field()->count() === 0) {

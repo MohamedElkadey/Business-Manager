@@ -9,6 +9,7 @@ class VariantAttributeValue extends Model
     protected $table = 'variant_attributes';
 
     protected $fillable = [
+        'company_id',
         'template_id',
         'name',
         'key',

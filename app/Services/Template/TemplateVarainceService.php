@@ -3,14 +3,16 @@
 use App\Models\Company;
 use App\Models\Template;
 use App\Models\VariantAttributeOption;
+use App\Tenancy\TenantContext;
 use Illuminate\Support\Str;
 use App\Models\VariantAttributeValue;
 class TemplateVarainceService{
+    public function __construct(private TenantContext $tenant , private TenantGuard $tenantGuard){}
 
-    public function createAtribute(Company $company, Template $template, array $data){
+    public function createAtribute( Template $template, array $data){
         $this->validate($template);
         return VariantAttributeValue::create([
-            'company_id'    => $company->id,
+            'company_id'    => $this->tenant->getCompanyId(),
             'template_id'   => $template->id,
             'name'          => $data['name'],
             'key'           => $this->generateKey($data['name'], $template),
@@ -59,6 +61,7 @@ class TemplateVarainceService{
         $option->delete();
     }
     private function validate(Template $template){
+        $this->tenantGuard->checkId($template->company_id);
         if($template->status !== 'draft'){
             throw new DomainException('Only draft templates can be modified.');
         }

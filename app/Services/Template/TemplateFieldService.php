@@ -2,10 +2,11 @@
 
 use App\Models\Field;
 use App\Models\Template;
+use App\Tenancy\TenantContext;
 use DomainException;
 
-class TemplateFieldService
-{
+class TemplateFieldService{
+    public function __construct(private TenantContext $tenant , private TenantGuard $tenantGuard){}
     protected array $validTypes = [
         'string',
         'number',
@@ -87,7 +88,7 @@ class TemplateFieldService
 
     private function assertTemplateEditable(Template $template): void
     {
-        if ($template->status !== 'draft') {
+        if (!app(TemplatePublishService::class)->is_draft($template)) {
             throw new DomainException('Cannot modify fields of a non-draft template.');
         }
     }
@@ -99,7 +100,7 @@ class TemplateFieldService
         }
     }
 
-    private function validateDefaultValue(Field $field, $defaultValue): void
+    public function validateDefaultValue(Field $field, $defaultValue): void
     {
         if (is_null($defaultValue)) return;
 
@@ -154,6 +155,14 @@ class TemplateFieldService
             $clonedField->template_id = $cloned->id;
             $clonedField->save();
         });
+    }
+    public function getFields(Template $template ){
+        $this->tenantGuard->checkId($template->company_id);
+        return $template->field()->orderBy('position')->get();
+    }
+    public function getField(Template $template, int $fieldId){
+        $this->tenantGuard->checkId($template->company_id);
+        return Field::where('template_id',$template->id)->findOrFail($fieldId);
     }
 
 

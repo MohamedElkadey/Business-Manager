@@ -17,12 +17,13 @@ return new class extends Migration
 
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
 
-            $table->string('sku');
+            $table->string('sku')->nullable();
             $table->decimal('price_override', 12, 4)->nullable();
             $table->integer('stock_quantity')->default(0);
-
+            $table->string('combination_key')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->unique(['product_id', 'combination_key']);
             $table->unique(['product_id','sku']);
             $table->index('product_id');
         });
