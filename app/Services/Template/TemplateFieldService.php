@@ -164,7 +164,10 @@ class TemplateFieldService{
         $this->tenantGuard->checkId($template->company_id);
         return Field::where('template_id',$template->id)->findOrFail($fieldId);
     }
-
+    public function getRequiredFields(Template $template){
+        $this->tenantGuard->checkId($template->company_id);
+        return $template->field->where('required' , true)->get();
+    }
 
 }
 

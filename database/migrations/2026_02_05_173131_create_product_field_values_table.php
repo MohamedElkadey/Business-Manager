@@ -21,8 +21,6 @@ return new class extends Migration
             $table->boolean('value_boolean')->nullable();
             $table->date('value_date')->nullable();
             $table->dateTime('value_datetime')->nullable();
-            $table->jsonb('value_json')->nullable();
-            $table->jsonb('extra')->nullable();
             $table->timestamps();
             
             $table->index(['product_id','field_id']);

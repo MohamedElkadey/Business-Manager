@@ -14,8 +14,7 @@ class ProductFieldValue extends Model
         'value_boolean',
         'value_date',
         'value_datetime',
-        'value_json',
-        'extra',
+
     ];
     protected $guarded = [
         'id',
@@ -27,8 +26,6 @@ class ProductFieldValue extends Model
         'value_boolean'  => 'boolean',
         'value_date'     => 'date',
         'value_datetime' => 'datetime',
-        'value_json'     => 'array',
-        'extra'          => 'array',
     ];
     public function field(){
         return $this->belongsTo(Field::class);

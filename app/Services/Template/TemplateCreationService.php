@@ -49,7 +49,10 @@ class TemplateCreateService{
         });
 
     }
-    
+    public function getTemplates(){
+        $this->tenantGuard->checkId($this->tenant->getCompanyId());
+        return Template::where('company_id',$this->tenant->getCompanyId())->get();
+    }
 
 }
 

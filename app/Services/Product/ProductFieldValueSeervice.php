@@ -21,7 +21,7 @@ class ProductFieldValueService{
             'value_boolean' => $field->field_type === 'boolean' ? $value : null,
             'value_date' => $field->field_type === 'date' ? $value : null,
             'value_datetime' => $field->field_type === 'datetime' ? $value : null,
-            'value_json' => in_array($field->field_type , ['select','json']) ? json_encode($value) : null,
+            
         ]);
         return $val;
     }
@@ -39,6 +39,7 @@ class ProductFieldValueService{
     }
     private function assetProductSupportsField(Product $product ,  int $fieldId){
         $this->tenantGuard->checkId($product->company_id);
+        app(TemplatePublishService::class)->sh_published($product->template);
         $field = app(TemplateFieldService::class)->getField($product->template,$fieldId);
         return $field;
     }
@@ -62,12 +63,18 @@ class ProductFieldValueService{
             'value_boolean' => $field->field_type === 'boolean' ? $value : null,
             'value_date' => $field->field_type === 'date' ? $value : null,
             'value_datetime' => $field->field_type === 'datetime' ? $value : null,
-            'value_json' => in_array($field->field_type , ['select','json']) ? json_encode($value) : null,
         ]);
         return $fieldValue;
     }
-    public function createAll(Product $product , array $fieldValues ){ // [field_id , value]
+    public function createAll(Product $product , array $fieldValues ){ // [field_id , value  ]
         $createdValues = [];
+        $required = app(TemplateFieldService::class)->getRequiredFields($product->template);
+        $ids = collect($fieldValues)->pluck('field_id')->toArray();
+        $missing = $required->diff($ids);
+        if($missing->isNotEmpty()){
+            $missingFields = $required->whereIn('id', $missing)->pluck('name')->implode(', ');
+            throw new DomainException("Required fields missing: {$missingFields}");
+        }
         DB::transaction(function() use ($product , $fieldValues , &$createdValues){
             foreach($fieldValues as $fieldV){
                 $createdValues[] = $this->addProductFieldValue($product , $fieldV['field_id'], $fieldV['value']);
