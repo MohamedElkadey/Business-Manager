@@ -139,10 +139,11 @@ class ProductVarianceService {
         
         return $product->variants()->with(['optionValues.variantAttribute', 'optionValues.variantAttributeOption'])->get();
     }
-    public function getVariantById(int $variantId, int $companyId){
+    public function getVariantById(int $variantId){
+        $companyId = $this->tenant->getCompanyId();
         return ProductVariant::where('company_id', $companyId)
             ->with(['optionValues.variantAttribute', 'optionValues.variantAttributeOption'])
-            ->findOrFail($variantId);
+            ->firstOrFail($variantId);
     }
     private function generateCombinations(array $arrays, array $current = [], int $index = 0, callable $callback)
     {

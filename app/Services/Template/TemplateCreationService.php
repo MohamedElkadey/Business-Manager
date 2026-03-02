@@ -13,7 +13,7 @@ class TemplateCreateService{
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'expression_type' => $data['expression_type'] ?? 'fixed',
-            'expression' => $data['expression'] ?? null,
+            'expression' => ($data['expression_type'] == 'fixed')? ($data['expression'] ?? null) : null,
             'pricing_version' => 1,
             'parent_template_id' => null,
             'is_active' => true,

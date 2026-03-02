@@ -47,14 +47,14 @@ class ProductFieldValueService{
         $this->tenantGuard->checkId($product->company_id);
         return $product->fieldValues()->with('field')->get();
     }
-    public function getProductFieldValue(Product $product , int $fieldValueId){
+    public function getProductFieldValue(Product $product , int $fieldId){
         $this->tenantGuard->checkId($product->company_id);
-        $fieldValue = ProductFieldValue::where('product_id',$product->id)->findOrFail($fieldValueId);
+        $fieldValue = ProductFieldValue::where('product_id',$product->id)->where('field_id' , $fieldId)->firstOrFail();
         $fieldValue->load('field');
         return $fieldValue;
     }
-    public function updateProductFieldValue(Product $product , int $fieldValueId , $value){
-        $fieldValue = $this->getProductFieldValue($product,$fieldValueId);
+    public function updateProductFieldValue(Product $product , int $fieldId , $value){
+        $fieldValue = $this->getProductFieldValue($product,$fieldId);
         $field = $fieldValue->field;
         $value = $this->checkinputValue($field , $value);
         $fieldValue->update([

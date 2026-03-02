@@ -22,6 +22,7 @@ class ProductService{
                 'base_rate' => $data['base_rate'] ?? 0,
                 'extra' => $data['extra'] ?? null,
             ]);
+            $product = app(ProductPriceService::class)->check_price_type($product);
             app(ProductFieldValueService::class)->createAll($product, $data['field_values']);
             return $product->fresh();
             
