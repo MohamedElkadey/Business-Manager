@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('template_id')->constrained('templates')->cascadeOnDelete();
 
             $table->string('key',50)->nullable(false); // width, height, quantity
-            $table->string('label');
+            $table->string('label')->nullable(false);
 
             $table->enum('input_type', [
                 'number', 'string', 'boolean', 'date', 'select'

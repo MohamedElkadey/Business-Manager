@@ -53,6 +53,11 @@ class TemplatePublishService
         if($this->is_published($template))
             throw new DomainException('Template must be published.');
     }
+    public function sh_draft(Template $template){
+        if(!$this->is_draft($template)){
+            throw new DomainException('Template Should be Draft');
+        }
+    }
     private function validateTemplateStructure(Template $template): void
     {
         if ($template->field()->count() === 0) {

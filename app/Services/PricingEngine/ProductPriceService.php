@@ -42,6 +42,7 @@ class ProductPriceService{
     }
     private function expressionPrice(Product $product){
         // ToDo
+        return 1;
     }
     private function getPriceOverrided(ProductVariant $variant , array $inputs){
         $p = $variant->price_override;

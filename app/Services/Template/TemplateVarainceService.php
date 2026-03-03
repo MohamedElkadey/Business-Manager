@@ -39,9 +39,7 @@ class TemplateVarainceService{
     }
 
     public function deleteAtribute(VariantAttributeValue $attribute){
-        if($attribute->template->status !== 'draft'){
-            throw new DomainException('Only attributes of draft templates can be deleted.');
-        }
+        app(TemplatePublishService::class)->sh_draft($attribute->template);
         $attribute->delete();
     }
     public function addOption(VariantAttributeValue $attribute, string $optionValue){
@@ -52,7 +50,7 @@ class TemplateVarainceService{
         ]);
     }
     private function validateOptionValueExists(VariantAttributeValue $attribute, string $optionValue){
-        if($attribute->options()->where('value', $optionValue)->exists()){
+        if($attribute->options->where('value', $optionValue)->exists()){
             throw new DomainException('Option value already exists.');
         }
     }
@@ -62,9 +60,7 @@ class TemplateVarainceService{
     }
     private function validate(Template $template){
         $this->tenantGuard->checkId($template->company_id);
-        if($template->status !== 'draft'){
-            throw new DomainException('Only draft templates can be modified.');
-        }
+        app(TemplatePublishService::class)->sh_draft($template);
     }
 
     public function cloneVariantDefinitions(Template $original, Template $cloned){

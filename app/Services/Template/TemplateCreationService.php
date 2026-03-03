@@ -45,6 +45,8 @@ class TemplateCreateService{
             app(TemplateFieldService::class)->cloneFields($template, $cloned);
             // Clone variant attributes and options
             app(TemplateVarainceService::class)->cloneVariantDefinitions($template, $cloned);
+            // Clone Price Inpute Fields
+            app(TemplatePricingInputService::class)->cloneInputs($template , $cloned);
             return $cloned->fresh();
         });
 

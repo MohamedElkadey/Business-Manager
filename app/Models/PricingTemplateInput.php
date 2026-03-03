@@ -23,6 +23,7 @@ class PricingTemplateInput extends Model
 
     protected $casts = [
         'options' => 'array',
+        'validation_rules' => 'array',
     ];
     public function template()
     {
