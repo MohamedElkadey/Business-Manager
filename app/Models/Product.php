@@ -13,6 +13,7 @@ class Product extends Model
         'description',
         'base_rate',
         'is_active',
+        'pricing_version',
         'extra',
     ];
     protected $guarded = [

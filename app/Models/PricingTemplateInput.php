@@ -33,5 +33,8 @@ class PricingTemplateInput extends Model
     {
         return $this->hasMany(CartItemPricingInput::class);
     }
+    public function templatePricingInput(){
+        return $this->belongsToMany(PricingTemplateInput::class , 'pricing_template_input_id');
+    }
 
 }

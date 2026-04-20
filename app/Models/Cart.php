@@ -10,6 +10,7 @@ class Cart extends Model
     protected $guarded = [
         'company_id',
         'customer_id',
+        'pos_session_id',
         'status',
     ];
 
@@ -28,6 +29,9 @@ class Cart extends Model
     }
     public function cartItems(){
         return $this->hasMany(CartItem::class);
+    }
+    public function posSession(){
+        return $this->belongsTo(PosSession::class);
     }
 
 }

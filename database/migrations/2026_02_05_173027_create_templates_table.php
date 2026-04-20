@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('status')->default('draft'); // draft | published | archived
             $table->text('expression')->nullable(); // pricing formula
             $table->string('expression_type')->default('fixed');
-            $table->integer('pricing_version')->default(1);
 
             $table->foreignId('parent_template_id')->nullable()->constrained('templates')->nullOnDelete();
             

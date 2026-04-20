@@ -15,7 +15,6 @@ class Template extends Model
         'description',
         'expression',
         'expression_type',
-        'pricing_version',
         'parent_template_id',
         'is_active',
         'status',

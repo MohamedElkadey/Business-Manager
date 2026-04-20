@@ -45,8 +45,8 @@ class ProductService{
             $product->update([
                 'name' =>$data['name'] ?? $product->name,
                 'description' => $data['description'] ?? $product->description,
-                'is_active' => $data['is_active'] ?? $product->is_active,
-                'base_rate' => $data['base_rate'] ?? $product->base_rate,
+                'is_active' => $this->updateProductPrice($product , (float)$data['base_rate']),
+                'base_rate' => $data['base_rate'] ?? $product->base_rate ,
                 'extra' => $data['extra'] ?? $product->extra,
             ]);
             foreach($data['field_values'] as $fv){
@@ -55,7 +55,12 @@ class ProductService{
 
         });
     }
-
+    private function updateProductPrice(Product $product , float $newPrice = 0){
+        if($product->base_rate != $newPrice){
+            $product->update(['base_rate' => $newPrice, 'pricing_version' => ($product->pricing_version + 1)] ); 
+        }
+        return $product->base_rate;
+    }
     
     private function assertProductSupports(Template $template){
         $this->tenantGuard->checkId($template->company_id);

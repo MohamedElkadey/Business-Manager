@@ -12,8 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cart_items', function (Blueprint $table) {
-            $table->foreignId('product_variant_id')->nullable()->constrained('product_variants');
-
+            $table->foreignId('product_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+            DB::statement("
+                CREATE UNIQUE INDEX cart_items_unique_product_variant
+                ON cart_items (
+                    company_id,
+                    cart_id,
+                    product_id,
+                    COALESCE(product_variant_id, 0)
+                )
+            ");
         });
     }
 
@@ -24,6 +35,9 @@ return new class extends Migration
     {
         Schema::table('cart_items', function (Blueprint $table) {
             $table->dropConstrainedForeignId('product_variant_id');
+            DB::statement("
+                DROP INDEX IF EXISTS cart_items_unique_product_variant
+            ");
         });
     }
 };

@@ -64,13 +64,14 @@ class ProductPriceService{
                 return ['price' => $price , 'type' => $template->expression_type , 'expression' => $template->expression  ];
             case "input_base_exp":
                 // ToDo
+                $price['input'] = $inputs;
                 break;
             default:
                 throw new DomainException("invalid expression type");
         }
     }
 
-    public function getPrice(Product $product ,int $varintId = null , array $input_base = null){
+    public function getPrice(Product $product ,?int $varintId = null , array $input_base = null){
         $this->tenantGuard->checkId($product->company_id);
         $varIds = collect(app(ProductVarianceService::class)->getVariants($product))->pluck('id')->toArray();
         if(!empty($varIds)){
@@ -84,7 +85,7 @@ class ProductPriceService{
             $snapshot = $this->priceCalc((float)$product->base_rate,$product, $input_base);
         
         $template = $product->template;
-        $snapshot = array_merge($snapshot , ['product_id' => $product->id ,'template_id' => $template->id ,'pricing_version' => $template->pricing_version  ]);
+        $snapshot = array_merge($snapshot , ['product_id' => $product->id ,'template_id' => $template->id ,'pricing_version' => $product->pricing_version  ]);
 
         return $snapshot;
     }

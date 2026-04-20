@@ -17,6 +17,7 @@ class Custmer extends Model
         'phone',
         'address',
         'metadata',
+        'is_active',
     ];
     protected $casts = [
         'metadata' => 'array',
@@ -26,5 +27,8 @@ class Custmer extends Model
     }
     public function orders(){
         return $this->hasMany(Order::class);
+    }
+    public function cart(){
+        return $this->hasMany(Cart::class);
     }
 }

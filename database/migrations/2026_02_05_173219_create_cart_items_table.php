@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('pricing_version'); // Version used to calculate price
             $table->jsonb('pricing_snapshot');  // Full frozen pricing data
 
+            // product_variant_id
             $table->timestamps();
 
             $table->index(['company_id','cart_id']);

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             
             $table->decimal('base_rate',12,2)->default(0); // Base pricing reference
+            $table->integer('pricing_version')->default(1);
 
             $table->boolean('is_active')->default(true);
             $table->jsonb('extra')->nullable();

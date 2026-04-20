@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('total_price',12,2)->default(0);
             $table->string('status')->default('pending');
             $table->jsonb('metadata')->nullable();
-
+            // pos_session_id
             $table->timestamps();
 
             $table->index(['company_id','customer_id']);

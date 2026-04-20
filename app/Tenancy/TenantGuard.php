@@ -8,6 +8,11 @@ class TenantGuard{
             throw new DomainException('Invalid tenant access.');
         }
     }
+    public function checkIdEqual(int $fId , int $sId){
+        if($fId != $sId){
+            throw new DomainException('Invalid access');
+        }
+    }
 }
 
 

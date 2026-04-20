@@ -14,7 +14,6 @@ class TemplateCreateService{
             'description' => $data['description'] ?? null,
             'expression_type' => $data['expression_type'] ?? 'fixed',
             'expression' => ($data['expression_type'] == 'fixed')? ($data['expression'] ?? null) : null,
-            'pricing_version' => 1,
             'parent_template_id' => null,
             'is_active' => true,
             'status' => 'draft',
@@ -36,7 +35,6 @@ class TemplateCreateService{
         return DB::transaction(function() use ($template) {
             $cloned = $template->replicate();
             $cloned->name = $template->name . ' Copy';
-            $cloned->pricing_version = 1;
             $cloned->parent_template_id = $template->id;
             $cloned->status = 'draft';
 

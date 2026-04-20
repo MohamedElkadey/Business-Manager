@@ -126,12 +126,19 @@ class ProductVarianceService {
     }
     public function updateVariant(ProductVariant $variant, array $data){
         $this->tenantGuard->checkId($variant->company_id);
-
+        
         $variant->update([
-            // 'price_override' => $data['price_override'] ?? $variant->price_override,
             'stock_quantity' => $data['stock_quantity'] ?? $variant->stock_quantity,
             'is_active' => $data['is_active'] ?? $variant->is_active,
         ]);
+        DB::transaction(function () use ($variant , $data){
+            if(!is_null($data['price_override']) && !is_null($variant->price_override)){
+                if($data['price_override'] !== $variant->price_override){
+                    $variant->product->pricing_version++;
+                }
+            }
+            $variant->update(['price_override' => $data['price_override']]);
+        });
         return $variant->fresh();
     }
     public function getVariants(Product $product){
@@ -187,42 +194,6 @@ class ProductVarianceService {
         if ($template->variantAttributes()->count() === 0) {
             throw new DomainException('Template does not support variants.');
         }
-    }
-
-    public function setDataVariants(Product $product , array $data){ // [variant_id , price_override , stock_quantity] 
-        $this->tenantGuard->checkId($product->company_id);
-        return DB::transaction(function () use ($data , $product){
-            foreach($data as $d ){
-                $varent = ProductVariant::where('company_id', $this->tenant->getCompanyId())->where('product_id',$product->id)->where('id',$d['variant_id'])->first();
-                if(!$varent){
-                    throw new DomainException('Varent not found');
-                }
-                $this->setQuantityVariant($product,$varent,$d['stock_quantity']);
-                $this->setPriceOverride($product,$varent, $d['override_price']);
-            }
-        });
-    }
-    public function checkVarentBelongToProduct(Product $product , ProductVariant $variant){
-        if($variant->product_id !== $product->id){
-            throw new DomainException('Variant does not belong to the product.');
-        }
-    }
-    public function setQuantityVariant(Product $product ,ProductVariant $variant, int $quantity){
-        $this->tenantGuard->checkId($product->company_id);
-        $this->checkVarentBelongToProduct($product,$variant);
-        $variant->update(['stock_quantity' => $quantity]);
-        $this->reloadQuantity($product);
-    }
-    public function setPriceOverride(Product $product ,ProductVariant $variant, float $newPrice){
-        $this->tenantGuard->checkId($product->company_id);
-        $this->checkVarentBelongToProduct($product,$variant);
-        return $variant->update(['price_override'=> $newPrice]);
-    }
-    public function reloadQuantity(Product $product){
-        $this->tenantGuard->checkId($product->company_id);
-        $variants = $product->variants;
-        $totalQuantity = $variants->sum('stock_quantity');
-        $product->update(['stock_quantity' => $totalQuantity]);
     }
 
 }
